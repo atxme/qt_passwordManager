@@ -22,17 +22,15 @@
 
 // Path: qt.h
 
-#include <QApplication>
+//#include <QApplication>
 
 
 
 // Path: path files
-#include "dependiancies.h"
-#include "userVerification.h"
+#include "userVerification.hpp"
 #include "daemon.h"
 
 //variables 
-
-extern str::string username ;
+extern std::string username ;
 
 #define ABSOLUTE_PATH "/root/.myapp/"
