@@ -1,4 +1,4 @@
-#include "hearderFiles/dependiancies.hpp"
+#include "include/dependiancies.hpp"
 
 void createTables(sqlite3 *db) {
     const char *createTableSQL = "CREATE TABLE IF NOT EXISTS users ("

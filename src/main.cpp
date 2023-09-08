@@ -1,4 +1,4 @@
-#include "hearderFiles/dependiancies.hpp"
+#include "include/dependiancies.hpp"
 
 int main ( int argc , char ** argv )
 {
