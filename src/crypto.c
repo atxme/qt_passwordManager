@@ -1,4 +1,12 @@
-#include "hearderFiles/crypto.h"
+#include "include/config.hpp"
+
+// Définition de TAG_SIZE si ce n'est pas déjà fait
+#ifndef TAG_SIZE
+#define TAG_SIZE 16
+#endif
+
+#define IV_SIZE 16
+#define EVP_MAX_BLOCK_LENGTH 32
 
 void sha3_512(const unsigned char *input, char *output) {
     unsigned char digest[64];
@@ -40,7 +48,7 @@ char *base64_encode(const unsigned char *input, int length) {
     BIO *bio, *b64;
     FILE *stream;
     int encodedSize = 4 * ((length + 2) / 3);
-    char *buffer = malloc(encodedSize + 1);
+    char *buffer = (char*)malloc(encodedSize + 1); // Convertir le pointeur void* en char*
     if (buffer == NULL) return NULL;
 
     stream = fmemopen(buffer, encodedSize + 1, "w");
@@ -62,7 +70,7 @@ char *base64_encode(const unsigned char *input, int length) {
 unsigned char *base64_decode(const char *input) {
     BIO *bio, *b64;
     int decodeLen = strlen(input);
-    unsigned char *buffer = malloc(decodeLen);
+    unsigned char *buffer = (unsigned char*)malloc(decodeLen); // Convertir le pointeur void* en unsigned char*
     if (buffer == NULL) return NULL;
 
     bio = BIO_new_mem_buf(input, -1);

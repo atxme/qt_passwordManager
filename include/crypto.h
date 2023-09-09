@@ -1,18 +1,19 @@
 #ifndef CRYPTO_H
 #define CRYPTO_H
 
-#include <stdio.h>
-#include <string.h>
 #include <openssl/evp.h>
 #include <openssl/rand.h>
-#include <openssl/bio.h>
-#include <openssl/buffer.h>
+#include <iostream>
+#include <string>
+#include <cstring> 
+#include <cstdio>  
+#include <openssl/err.h>
 
 #define TAG_SIZE 16
 #define IV_SIZE 16
 
-void sha_512 (char * [] data , char * [] dataEncrypted);
-void generateAesKey(unsigned char *aesKey)
+void sha3_512(const unsigned char *input, char *output);
+void generateAesKey(unsigned char *aesKey);
 void generateIv(unsigned char *iv);
 void hex2bin(const char *hex, unsigned char *bin, int len);
 void bin2hex(const unsigned char *bin, char *hex, int len);
