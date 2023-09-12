@@ -7,17 +7,17 @@ Welcome to the most secure password manager you'll ever use. Our password manage
 
 Features
 
-    Robust Encryption: We utilize SHA3-512 and AES-256 GCM encryption to ensure the highest level of security for your data.
+Robust Encryption: We utilize SHA3-512 and AES-256 GCM encryption to ensure the highest level of security for your data.
 
-    User-Friendly Interface: Our intuitive and user-friendly interface makes managing your passwords a breeze.
+-User-Friendly Interface: Our intuitive and user-friendly interface makes managing your passwords a breeze.
 
-    Cross-Platform Compatibility: Access your passwords from any device or platform, whether it's your computer, smartphone, or tablet.
+-Cross-Platform Compatibility: Access your passwords from any device or platform, whether it's your computer, smartphone, or tablet.
 
-    Password Generator: Create strong and unique passwords with our built-in password generator.
+Password Generator: Create strong and unique passwords with our built-in password generator.
 
-    Biometric Authentication: Securely access your passwords using your device's biometric authentication (fingerprint, face recognition).
+Biometric Authentication: Securely access your passwords using your device's biometric authentication (fingerprint, face recognition). (still in devellopment)
 
-    Password Audit: Keep track of your password strength and receive recommendations to enhance your security.
+-Password Audit: Keep track of your password strength and receive recommendations to enhance your security.
 
 Installation
 
