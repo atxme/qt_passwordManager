@@ -3,23 +3,24 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**", // Inclut tous les fichiers du projet
-                "/home/christophe/Documents/ESEO/PERSO/qt_passwordManager/include" 
+                "${workspaceFolder}/**",
+                "/home/christophe/Documents/ESEO/PERSO/qt_passwordManager/include"
             ],
             "defines": [],
-            "compilerPath": "/usr/bin/g++", // Chemin vers le compilateur GCC sur Linux
-            "cStandard": "c11", // Norme C (par exemple, c11, c99, etc.)
-            "cppStandard": "c++17", // Norme C++ (par exemple, c++17, c++11, etc.)
-            "intelliSenseMode": "linux-gcc-x64"
+            "compilerPath": "/usr/bin/g++",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-gcc-x64",
+            "configurationProvider": "ms-vscode.makefile-tools"
         },
         {
             "name": "Windows",
             "includePath": [
-                "${workspaceFolder}/**", // Inclut tous les fichiers du projet
-                "C:/chemin/vers/votre/dossier/include" // Ajoutez les chemins de vos fichiers d'en-tête ici
+                "${workspaceFolder}/**",
+                "C:/chemin/vers/votre/dossier/include"
             ],
             "defines": [],
-            "compilerPath": "C:/chemin/vers/votre/compilateur/gcc.exe", // Chemin vers le compilateur GCC sur Windows
+            "compilerPath": "C:/chemin/vers/votre/compilateur/gcc.exe",
             "cStandard": "c11",
             "cppStandard": "c++17",
             "intelliSenseMode": "msvc-x64"

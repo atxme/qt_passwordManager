@@ -30,26 +30,44 @@
 #include <sys/wait.h>
 #include <sys/stat.h>
 
-// Path: qt.h
+// Path: gtk.h
 
-//#include <QApplication>
+#include <gtk-3.0/gtk/gtk.h>
+#include <gtk-3.0/gtk/gtkmain.h>
+#include <gtk-3.0/gtk/gtkx.h>
+#include <glib.h>
+#include <gtk-3.0/gtk/gtkwidget.h>
+#include <gtk-3.0/gtk/gtkcontainer.h>
+#include <gtk-3.0/gtk/gtklabel.h>
+#include <gtk-3.0/gtk/gtkentry.h>
+#include <gtk-3.0/gtk/gtkbutton.h>
+#include <gtk-3.0/gtk/gtkwindow.h>
+
+
 
 // Path: path files
 #include "include/daemon.h"
 #include "include/crypto.h"
 #include "include/userVerification.hpp"
+#include "include/interface.hpp"
 
 
 //variables 
 
 #define ABSOLUTE_PATH "/var/Pegasus/"
 #define EVP_MAX_BLOCK_LENGTH 32
+#define IV_SIZE 16
+#define AES_KEY_SIZE 32
+#define DIGEST_SIZE 32
+
 
 
 extern std::string userID;
 extern int tempFileLenght ;
 extern char tempKey [32];
 extern char tempAesKey [32];
-
+extern char tempIv [16];
+extern bool isRegistered;
+extern bool isLogged;
 
 #endif 

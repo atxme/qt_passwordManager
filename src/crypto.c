@@ -31,6 +31,12 @@ void generateIv(unsigned char *iv) {
     RAND_bytes(iv, IV_SIZE);
 }
 
+void generateSalt(unsigned char *salt) {
+    RAND_bytes(salt, 16);
+}
+
+
+
 void hex2bin(const char *hex, unsigned char *bin, int len) {
     for (int i = 0; i < len; i += 2) {
         sscanf(&hex[i], "%2hhx", &bin[i / 2]);
@@ -101,7 +107,6 @@ long int getFileSize(const char *filename) {
 
     return file_size;
 }
-
 void aesEncrypt(const unsigned char *input, const unsigned char *aes_key, const unsigned char *iv, unsigned char *output) {
     EVP_CIPHER_CTX *ctx;
     int len, input_len = strlen((const char*)input);
@@ -109,29 +114,36 @@ void aesEncrypt(const unsigned char *input, const unsigned char *aes_key, const 
     ctx = EVP_CIPHER_CTX_new();
     EVP_EncryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL);
     EVP_EncryptInit_ex(ctx, NULL, NULL, aes_key, iv);
-    EVP_EncryptUpdate(ctx, output, &len, input, input_len);
+    EVP_EncryptUpdate(ctx, output + IV_SIZE, &len, input, input_len);
 
-    EVP_EncryptFinal_ex(ctx, output + len, &len);
+    EVP_EncryptFinal_ex(ctx, output + IV_SIZE + len, &len);
 
     // Récupération du tag
-    EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_GET_TAG, TAG_SIZE, output + len + input_len);
+    EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_GET_TAG, TAG_SIZE, output + IV_SIZE + len + input_len);
+    
+    // Copie du IV au début de la sortie
+    memcpy(output, iv, IV_SIZE);
 
     EVP_CIPHER_CTX_free(ctx);
 }
 
-int aesDecrypt(const unsigned char *ciphertext, const unsigned char *aes_key, const unsigned char *iv, unsigned char *plaintext) {
+int aesDecrypt(const unsigned char *ciphertext, const unsigned char *aes_key, unsigned char *plaintext) {
     EVP_CIPHER_CTX *ctx;
     int len, plaintext_len;
     unsigned char tag[TAG_SIZE];
-    int ciphertext_len = strlen((const char*)ciphertext) - TAG_SIZE;
+    unsigned char iv[IV_SIZE];
+    int ciphertext_len = strlen((const char*)ciphertext) - TAG_SIZE - IV_SIZE;
+
+    // Extraire le IV du début du texte chiffré
+    memcpy(iv, ciphertext, IV_SIZE);
 
     // Extraire le tag du texte chiffré
-    memcpy(tag, ciphertext + ciphertext_len, TAG_SIZE);
+    memcpy(tag, ciphertext + IV_SIZE + ciphertext_len, TAG_SIZE);
 
     ctx = EVP_CIPHER_CTX_new();
     EVP_DecryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL);
     EVP_DecryptInit_ex(ctx, NULL, NULL, aes_key, iv);
-    EVP_DecryptUpdate(ctx, plaintext, &len, ciphertext, ciphertext_len);
+    EVP_DecryptUpdate(ctx, plaintext, &len, ciphertext + IV_SIZE, ciphertext_len);
     plaintext_len = len;
 
     // Configurer le tag pour la vérification
@@ -146,7 +158,12 @@ int aesDecrypt(const unsigned char *ciphertext, const unsigned char *aes_key, co
     plaintext[plaintext_len] = '\0';
 
     EVP_CIPHER_CTX_free(ctx);
-    return 0;  // Succès
+    return 0;  
+}
+
+
+void pbkdf2(const char *password, const unsigned char *salt, unsigned char *key) {
+    PKCS5_PBKDF2_HMAC(password, strlen(password), salt, 16 , 100000, EVP_sha3_256(), 32, key);
 }
 
 /*

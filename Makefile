@@ -1,15 +1,17 @@
 # Nom de l'exécutable
 EXECUTABLE = Pegasus.exe
 
-# Dossiers source et inclusion
-SRC_DIR = /home/kali/qt_passwordManager/src
-OBJ_DIR = /home/kali/qt_passwordManager/src
+# Dossiers source et inclusion A modofier en fonction du pc utilisé
+SRC_DIR = /home/christophe/Documents/ESEO/PERSO/qt_passwordManager/src
+OBJ_DIR = /home/christophe/Documents/ESEO/PERSO/qt_passwordManager/src
 INCLUDE_DIR = .
 
 # Compilateur et options de compilation
 CC = g++
-CFLAGS = -I$(INCLUDE_DIR)
-LDFLAGS = -lssl -lcrypto -lsqlite3
+CFLAGS = -I$(INCLUDE_DIR) `pkg-config --cflags gtk+-3.0` # Ajoutez cette ligne pour les drapeaux GTK
+
+# Options de liage (bibliothèques GTK)
+LDFLAGS = -lssl -lcrypto -lsqlite3 `pkg-config --libs gtk+-3.0` # Ajoutez cette ligne pour les bibliothèques GTK
 
 # Liste des fichiers source (ajoutez tous vos fichiers source ici)
 SOURCES = $(wildcard $(SRC_DIR)/*.c) $(wildcard $(SRC_DIR)/*.cpp)
@@ -18,6 +20,7 @@ SOURCES = $(wildcard $(SRC_DIR)/*.c) $(wildcard $(SRC_DIR)/*.cpp)
 OBJECTS = $(SOURCES:.c=.o)
 OBJECTS := $(OBJECTS:.cpp=.o)
 
+# Règle de compilation par défaut
 all: $(EXECUTABLE) post_build
 
 post_build:
@@ -38,5 +41,3 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 # Nettoyage des fichiers objets et de l'exécutable
 clean:
 	rm -f $(SRC_DIR)/*.o $(EXECUTABLE)
-
-
