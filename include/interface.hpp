@@ -40,7 +40,9 @@ class loginWindow {
             loginWindow* self;
             GtkWidget *entry;
             GtkWidget *errorLabel;
+            GtkWidget *mainWindow; 
         };
+
         static void buttonClicked(GtkWidget *widget, gpointer data);
         void connectUser();
 };

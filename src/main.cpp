@@ -46,8 +46,8 @@ int main() {
     if (isLogged){
         std::cout << "welcome" << std::endl;
         signal(SIGINT, parentSignalHandler);
-        createDaemon(getpid()); 
+        
     }
-     
+    createDaemon(getpid()); 
     return 0;   
 }

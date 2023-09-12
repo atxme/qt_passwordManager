@@ -164,7 +164,6 @@ void loginWindow::togglePassword(GtkWidget *widget, gpointer data) {
         gtk_button_set_label(GTK_BUTTON(widget), "Hide");
     }
 }
-
 void loginWindow::buttonClicked(GtkWidget *widget, gpointer data) {
     CallbackData* callbackData = static_cast<CallbackData*>(data);
     GtkWidget *entry = callbackData->entry;
@@ -178,15 +177,13 @@ void loginWindow::buttonClicked(GtkWidget *widget, gpointer data) {
     unsigned char iv[IV_SIZE];
     unsigned char* salt = nullptr;
     unsigned char* encryptedHashPassword = nullptr;
-    unsigned char* hash = nullptr;
-
-    hash = new unsigned char[272]();
+    unsigned char* hash = new unsigned char[272]();
 
     readFileBinary("salt.bin", salt);
     readFileBinary("hash.bin", encryptedHashPassword);
 
     pbkdf2(password, salt, aesDerivedKey);
-    aesDecrypt(reinterpret_cast< unsigned char*>(encryptedHashPassword), aesDerivedKey,hash);
+    aesDecrypt(reinterpret_cast< unsigned char*>(encryptedHashPassword), aesDerivedKey, hash);
     sha3_512((const unsigned char*)password, hashPassword);
     
 
@@ -196,32 +193,33 @@ void loginWindow::buttonClicked(GtkWidget *widget, gpointer data) {
         return;
     }
 
-
     if (callbackData->self->connected) {
+        gtk_widget_destroy(callbackData->mainWindow);
         gtk_main_quit(); // quitter le main loop de GTK+
         return;
     } else {
         const gchar *errorMessage = "Mot de passe incorrect";
         gtk_label_set_text(GTK_LABEL(errorLabel), errorMessage);
         sleep(1);
-        // Utilisez CSS pour définir la couleur au lieu de gtk_widget_override_color
     }
 
-    delete [] salt;
-    delete [] encryptedHashPassword;
-    delete [] hash;
+    delete[] salt;
+    delete[] encryptedHashPassword;
+    delete[] hash;
 
-    // Réinitialiser le texte de l'entrée
+    
     gtk_entry_set_text(GTK_ENTRY(entry), "");
 }
 
-void loginWindow::connectUser(){
-    CallbackData data = {};
-    data.self = this;
 
+void loginWindow::connectUser() {
+    CallbackData *data = new CallbackData; // Allocation dynamique
+    data->self = this;
+    
     gtk_init(0, NULL);
 
     GtkWidget *connectUserwindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    data->mainWindow = connectUserwindow;
     gtk_window_set_default_size(GTK_WINDOW(connectUserwindow), 640, 480);
     g_signal_connect(connectUserwindow, "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
@@ -238,10 +236,10 @@ void loginWindow::connectUser(){
 
     GtkCssProvider *provider = gtk_css_provider_new();
     gchar *cssData = g_strdup_printf("window { background-image: linear-gradient(to bottom, %s, %s); }",
-                                        gdk_rgba_to_string(&startColor), gdk_rgba_to_string(&endColor));
+                                     gdk_rgba_to_string(&startColor), gdk_rgba_to_string(&endColor));
     gtk_css_provider_load_from_data(provider, cssData, -1, NULL);
     gtk_style_context_add_provider_for_screen(gdk_screen_get_default(), GTK_STYLE_PROVIDER(provider),
-                                                GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+                                              GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
     GtkWidget *vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 10);
     gtk_widget_set_halign(vbox, GTK_ALIGN_CENTER);
@@ -253,7 +251,7 @@ void loginWindow::connectUser(){
     gtk_box_pack_start(GTK_BOX(vbox), entry, FALSE, FALSE, 0);
     gtk_entry_set_visibility(GTK_ENTRY(entry), FALSE);
 
-    data.entry = entry;
+    data->entry = entry;
 
     GtkWidget *hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_box_pack_end(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
@@ -275,19 +273,14 @@ void loginWindow::connectUser(){
     GtkWidget *errorLabel = gtk_label_new(NULL);
     gtk_box_pack_end(GTK_BOX(vbox), errorLabel, FALSE, FALSE, 0);
 
-    data.errorLabel = errorLabel;
+    data->errorLabel = errorLabel;
 
-    g_signal_connect(toggleButton, "clicked", G_CALLBACK(togglePassword), data.entry);
-    g_signal_connect(button, "clicked", G_CALLBACK(buttonClicked), &data);
-    g_signal_connect(entry, "activate", G_CALLBACK(buttonClicked), &data);
+    g_signal_connect(toggleButton, "clicked", G_CALLBACK(togglePassword), data->entry);
+    g_signal_connect(button, "clicked", G_CALLBACK(buttonClicked), data);
+    g_signal_connect(entry, "activate", G_CALLBACK(buttonClicked), data);
     g_signal_connect_swapped(connectUserwindow, "destroy", G_CALLBACK(gtk_widget_destroy), connectUserwindow);
 
     gtk_widget_show_all(connectUserwindow);
 
     gtk_main();
 }
-
-
-
-
-
